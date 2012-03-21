@@ -7,7 +7,9 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>functional-emulator-interface</name>
   <url></url>
-  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <build>
   <pluginManagement>
   	<plugins>
