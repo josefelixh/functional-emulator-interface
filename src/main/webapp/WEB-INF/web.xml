@@ -16,7 +16,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
  <servlet>
    <display-name>Servlet1</display-name>
    <servlet-name>Servlet1</servlet-name>
-   <servlet-class>com.jfh.fei.servlet.EmulatorServlet</servlet-class>
+   <servlet-class>com.github.josefelixh.fei.servlet.EmulatorServlet</servlet-class>
    
    <load-on-startup>1</load-on-startup>
  </servlet>
