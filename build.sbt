@@ -9,3 +9,9 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "1.7.1" % "test"
 seq(webSettings :_*)
 
 libraryDependencies += "org.mortbay.jetty" % "jetty" % "6.1.22" % "container"
+
+libraryDependencies += "org.apache.httpcomponents" % "httpcore-nio" % "4.1.4"
+
+libraryDependencies ++= Seq(
+  "junit" % "junit" % "4.10"
+)
