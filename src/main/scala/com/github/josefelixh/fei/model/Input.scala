@@ -1,5 +1,5 @@
 package com.github.josefelixh.fei.model
 
-class Input {
-
+abstract class Input extends Serializable {
+	def ident: String
 }

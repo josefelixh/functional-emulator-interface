@@ -1,5 +1,5 @@
 package com.github.josefelixh.fei.model
 
-class Output {
+class Output extends Serializable {
 
 }

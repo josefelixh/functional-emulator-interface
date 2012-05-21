@@ -1,22 +1,51 @@
 package com.github.josefelixh.fei.emulation
-import com.github.josefelixh.fei.Emulation
-import com.github.josefelixh.fei.model.Input
-import com.github.josefelixh.fei.model.Output
 
+import com.github.josefelixh.fei.model._
+import com.github.josefelixh.fei.emulation.{
+  CommandLineEmulationInput => In,
+  CommandLineEmulationOutput => Out
+}
+import com.github.josefelixh.fei.emulation.repository.{
+  CommandLineEmulationRespository => Repository
+}
 
-object CommandLineEmulation extends Emulation[CommandLineEmulationInput, CommandLineEmulationOutput] {
+object CommandLineEmulation {
   
-  override def emulate(input: CommandLineEmulationInput): CommandLineEmulationOutput = {
-    def commandUnderEmulation = input.args(0)
-    def commandArguments = input.args.filter { arg => commandUnderEmulation != arg }
+  def apply(input: In) = {
+    new CommandLineEmulation().emulate(input)
+  }
+}
+
+class CommandLineEmulation extends Emulation[In, Out] {
+  
+  def emulate(input: In) = {
+    val recordedOutput = Repository.get(input)
     
-    def commandLineOutput(command: String, args: Array[String]) = command match {
-      case "ping" => Array(pingLocalhostEmulationOutput)
+    if (recordedOutput != null) {
+      learnEmulation(input) {input: In =>
+        retrieve(input)
+      }
+    } else {
+      recordedOutput
     }
-    new CommandLineEmulationOutput(commandLineOutput(commandUnderEmulation, commandArguments))
+     
   }
   
-  def pingLocalhostEmulationOutput = 
+  def learnEmulation(input: In)(f: (In => Out)) = {
+    f.apply(input)
+  }
+  
+  def retrieve(input: In): Out = {
+    val commandUnderEmulation = input.args(0)
+    val commandArguments = input.args diff commandUnderEmulation
+    new Out(commandLineOutput(commandUnderEmulation, commandArguments))
+  }
+  
+  def commandLineOutput(command: String, args: Array[String]) = command match {
+		case "ping" => Array(pingLocalhostEmulationOutput)
+  }
+  
+  val pingLocalhostEmulationOutput = 
     "\n" + """
     |PING localhost (127.0.0.1) 56(84) bytes of data.
 		|64 bytes from localhost (127.0.0.1): icmp_req=1 ttl=64 time=0.075 ms
@@ -42,10 +71,14 @@ object CommandLineEmulation extends Emulation[CommandLineEmulationInput, Command
     """.stripMargin
 }
 
-case class CommandLineEmulationInput(val args: Array[String]) extends Input
+case class CommandLineEmulationInput(val args: Array[String]) extends Input {
+  override def ident = {
+    args.mkString("=!=")
+  }
+}
 
 case class CommandLineEmulationOutput(private val output: Array[String]) extends Output {
   override def toString() = {
-   output.foldLeft("")(_+ " " +_)
+   output.mkString(" ")
   }
-} 
+}
