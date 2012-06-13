@@ -19,16 +19,10 @@ object CommandLineEmulation {
 class CommandLineEmulation extends Emulation[In, Out] {
   
   def emulate(input: In) = {
-    val recordedOutput = Repository.get(input)
-    
-    if (recordedOutput != null) {
-      learnEmulation(input) {input: In =>
-        retrieve(input)
-      }
-    } else {
-      recordedOutput
+    Repository.get(input) match {
+      case Some(output) => output
+      case None => learnEmulation(input) { input: In => retrieve(input) }
     }
-     
   }
   
   def learnEmulation(input: In)(f: (In => Out)) = {

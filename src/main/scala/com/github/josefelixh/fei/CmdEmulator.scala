@@ -7,19 +7,19 @@ import com.github.josefelixh.fei.model.Player
 
 object CmdEmulator
 	extends Player[CommandLineEmulationInput, CommandLineEmulationOutput]
-		with Recorder[CommandLineEmulationInput, CommandLineEmulationOutput] {
+		with Recorder[CommandLineEmulationInput, CommandLineEmulationOutput] 
+			with App {
   
-  def main(args: Array[String]) {
-    def input = new CommandLineEmulationInput(args)
-    
-    def output = CommandLineEmulation(input)
-    record(input) {input: CommandLineEmulationInput =>
-      output
-    }
-    
-    play(input) match {
-      case Some(output) => println(output)
-      case None => println("No recording found")
-    }
+  def input = new CommandLineEmulationInput(args)
+  
+  def output = CommandLineEmulation(input)
+  
+  record(input) {input: CommandLineEmulationInput =>
+    output
+  }
+  
+  play(input) match {
+    case Some(output) => println(output)
+    case None => println("No recording found")
   }
 }
